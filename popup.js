@@ -182,13 +182,13 @@ function createHtmlElement(element) {
   function getFocusedElement() {
     return new Promise((resolve) => {
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        chrome.tabs.executeScript(
-          tabs[0].id,
+        chrome.scripting.executeScript(
           {
-            code: 'document.activeElement.outerHTML;',
+            target: { tabId: tabs[0].id },
+            func: () => document.activeElement.outerHTML
           },
           (results) => {
-            resolve({ source: results[0] });
+            resolve({ source: results[0].result });
           }
         );
       });
